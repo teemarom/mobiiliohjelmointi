@@ -7,8 +7,8 @@ import Arvauspeli from './Arvauspeli';
 export default function App() {
   return (
     <View style={styles.container}>
-    <Arvauspeli></Arvauspeli>
-    <StatusBar style="auto" />
+    <Laskin />
+    
     </View>
   );
 }

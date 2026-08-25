@@ -1,63 +1,89 @@
-import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { Button, Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, Keyboard, Pressable, StyleSheet, Text, TextInput, View, FlatList } from 'react-native';
 
 export default function Laskin() {
     const [luku1, setLuku1] = useState("");
     const [luku2, setLuku2] = useState("");
     const [vastaus, setVastaus] = useState("0");
+    const [laskut, setLaskut] = useState<string[]>([]);
 
     const plus = () => {
-        setVastaus(String(Number(luku1) + Number(luku2)));
+        const tulos = (String(Number(luku1) + Number(luku2)))
+        setVastaus(String(tulos));
+        setLaskut([...laskut, `${luku1} + ${luku2} = ${tulos}`])
     };
 
     const miinus = () => {
-        setVastaus(String(Number(luku1) - Number(luku2)));
+        const tulos = (String(Number(luku1) - Number(luku2)))
+        setVastaus(String(tulos));
+        setLaskut([...laskut, `${luku1} - ${luku2} = ${tulos}`])
     };
 
     const kerto = () => {
-        setVastaus(String(Number(luku1) * Number(luku2)));
+        const tulos = (String(Number(luku1) * Number(luku2)))
+        setVastaus(String(tulos));
+        setLaskut([...laskut, `${luku1} * ${luku2} = ${tulos}`])
     }
 
     const jako = () => {
-        setVastaus(String(Number(luku1) / Number(luku2)));
+        const tulos = (String(Number(luku1) / Number(luku2)))
+        setVastaus(String(tulos));
+        setLaskut([...laskut, `${luku1} / ${luku2} = ${tulos}`])
     }
 
     const reset = () => {
         setLuku1("")
         setLuku2("")
         setVastaus("0")
+        setLaskut([])
     }
 
     return (
         <Pressable onPress={Keyboard.dismiss} style={styles.container}>
-        <Text>Result: {vastaus} </Text>
-        <TextInput style={styles.input} // luku 1
+        {/* vastaus */}
+        <Text style={{fontSize:24}}>Result: {vastaus} </Text>
+
+        {/* luku1 */}
+        <TextInput style={styles.input} 
             placeholder='luku1'
             keyboardType='numeric'
             value={luku1}
             onChangeText={setLuku1}></TextInput>
-        <TextInput style={styles.input} // luku 2
+        {/* luku2 */}
+        <TextInput style={styles.input}
             placeholder='luku2'
             keyboardType='numeric'
             value={luku2}
             onChangeText={setLuku2}></TextInput>
-        <View style={styles.buttons}>
+        {/* painikkeet */}
+        <View style={styles.buttons}> 
             <Button title="+" onPress={plus}/> 
             <Button title="-" onPress={miinus}/>
             <Button title="*" onPress={kerto}/>
             <Button title="/" onPress={jako}/>
         </View>
-        <Pressable onPress={reset}>
+        {/* reset */}
+        <Pressable onPress={reset}> 
             <Text style={styles.reset}> RESET </Text>
         </Pressable>
-        <StatusBar style="auto" />
+        
+        {laskut.length > 0 &&
+        (<View>
+        <Text style={{textAlign: "center", fontSize:16, marginBottom: 10}}>History</Text>
+        <FlatList 
+            style={styles.flatlist}
+            contentContainerStyle={styles.flatlistContent}
+            data={laskut}
+            renderItem={({item}) => <Text>{item}</Text>}
+        />
+        </View>)}
         </Pressable>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
+        paddingTop: 200,
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
@@ -79,6 +105,14 @@ const styles = StyleSheet.create({
         marginTop: 25,
         borderWidth: 4,
         borderColor: 'red',
+        marginBottom: 25
     },
+    flatlist:{
+        height: 200,
+        width: 300,
+    },
+    flatlistContent: {
+        alignItems: "center"
+    }
 
 });
