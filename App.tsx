@@ -1,15 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import Laskin from './Laskin';
 import Arvauspeli from './Arvauspeli';
+import Ostoslista from './Ostoslista';
 
 
 export default function App() {
   return (
-    <View style={styles.container}>
-    <Laskin />
-    
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <Ostoslista />
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
