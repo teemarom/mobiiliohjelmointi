@@ -1,11 +1,15 @@
 import { useState } from 'react';
-import { Button, Keyboard, Pressable, StyleSheet, Text, TextInput, View, FlatList } from 'react-native';
+import { Button, Keyboard, Pressable, StyleSheet, Text, TextInput, View, KeyboardAvoidingView, Platform } from 'react-native';
 
-export default function Laskin() {
+type LaskinProps = {
+    laskut: string[];
+    setLaskut: React.Dispatch<React.SetStateAction<string[]>>
+}
+
+export default function Laskin({ laskut, setLaskut }: LaskinProps) {
     const [luku1, setLuku1] = useState("");
     const [luku2, setLuku2] = useState("");
     const [vastaus, setVastaus] = useState("0");
-    const [laskut, setLaskut] = useState<string[]>([]);
 
     const plus = () => {
         const tulos = (String(Number(luku1) + Number(luku2)))
@@ -39,51 +43,44 @@ export default function Laskin() {
     }
 
     return (
-        <Pressable onPress={Keyboard.dismiss} style={styles.container}>
-        {/* vastaus */}
-        <Text style={{fontSize:24}}>Result: {vastaus} </Text>
+        <KeyboardAvoidingView
+            style={styles.keyboardView}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            <Pressable onPress={Keyboard.dismiss} style={styles.container}>
+                {/* vastaus */}
+                <Text style={{ fontSize: 24 }}>Result: {vastaus} </Text>
 
-        {/* luku1 */}
-        <TextInput style={styles.input} 
-            placeholder='luku1'
-            keyboardType='numeric'
-            value={luku1}
-            onChangeText={setLuku1}></TextInput>
-        {/* luku2 */}
-        <TextInput style={styles.input}
-            placeholder='luku2'
-            keyboardType='numeric'
-            value={luku2}
-            onChangeText={setLuku2}></TextInput>
-        {/* painikkeet */}
-        <View style={styles.buttons}> 
-            <Button title="+" onPress={plus}/> 
-            <Button title="-" onPress={miinus}/>
-            <Button title="*" onPress={kerto}/>
-            <Button title="/" onPress={jako}/>
-        </View>
-        {/* reset */}
-        <Pressable onPress={reset}> 
-            <Text style={styles.reset}> RESET </Text>
-        </Pressable>
-        
-        {laskut.length > 0 &&
-        (<View>
-        <Text style={{textAlign: "center", fontSize:16, marginBottom: 10}}>History</Text>
-        <FlatList 
-            style={styles.flatlist}
-            contentContainerStyle={styles.flatlistContent}
-            data={laskut}
-            renderItem={({item}) => <Text>{item}</Text>}
-        />
-        </View>)}
-        </Pressable>
+                {/* luku1 */}
+                <TextInput style={styles.input}
+                    placeholder='luku1'
+                    keyboardType='numeric'
+                    value={luku1}
+                    onChangeText={setLuku1}></TextInput>
+                {/* luku2 */}
+                <TextInput style={styles.input}
+                    placeholder='luku2'
+                    keyboardType='numeric'
+                    value={luku2}
+                    onChangeText={setLuku2}></TextInput>
+                {/* painikkeet */}
+                <View style={styles.buttons}>
+                    <Button title="+" onPress={plus} />
+                    <Button title="-" onPress={miinus} />
+                    <Button title="*" onPress={kerto} />
+                    <Button title="/" onPress={jako} />
+                </View>
+                {/* reset */}
+                <Pressable onPress={reset}>
+                    <Text style={styles.reset}> RESET </Text>
+                </Pressable>
+
+            </Pressable>
+        </KeyboardAvoidingView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 200,
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
@@ -105,14 +102,13 @@ const styles = StyleSheet.create({
         marginTop: 25,
         borderWidth: 4,
         borderColor: 'red',
-        marginBottom: 25
+        marginBottom: 25,
+        backgroundColor: "red",
+        color: "white"
     },
-    flatlist:{
-        height: 200,
-        width: 300,
+    keyboardView: {
+        flex: 1,
     },
-    flatlistContent: {
-        alignItems: "center"
-    }
+
 
 });

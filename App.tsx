@@ -1,17 +1,54 @@
-import { StatusBar } from 'expo-status-bar';
-import { Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
-import Laskin from './Laskin';
-import Arvauspeli from './Arvauspeli';
-import Ostoslista from './Ostoslista';
+import { Keyboard, StyleSheet, TouchableWithoutFeedback, } from 'react-native';
 
+import Laskin from './Laskin';
+import History from './History';
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useState } from 'react';
+
+import Entypo from '@expo/vector-icons/Entypo';
+import AntDesign from '@expo/vector-icons/AntDesign';
+
+
+
+const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const [laskut, setLaskut] = useState<string[]>([]);
+
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <Ostoslista />
-      </View>
-    </TouchableWithoutFeedback>
+    <NavigationContainer>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <Tab.Navigator>
+          <Tab.Screen 
+            name="Laskin"
+            options={{
+              tabBarIcon: ({color, size}) => (
+                <Entypo name="calculator" size={28} color="black" />
+              ),
+            }}>
+            {() => (
+              <Laskin
+                laskut={laskut}
+                setLaskut={setLaskut}
+              />
+            )}
+          </Tab.Screen>
+          <Tab.Screen 
+          name="History"
+          options={{
+            tabBarIcon: ({color, size}) => (
+              <AntDesign name="history" size={28} color="black" />
+            )
+          }}>
+            {() => (
+              <History laskut={laskut} />
+            )}
+          </Tab.Screen>
+        </Tab.Navigator>
+      </TouchableWithoutFeedback>
+    </NavigationContainer>
   );
 }
 
