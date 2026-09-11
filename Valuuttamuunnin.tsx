@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View, } from "react-native";
+import { ActivityIndicator, Image, Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View, } from "react-native";
 
 import { Picker } from '@expo/ui/community/picker';
 
@@ -21,22 +21,31 @@ export default function Valuuttamuunnin() {
     const [rahasumma, setRahasumma] = useState("")
     const [kohdeValuutta, setKohdeValuutta] = useState("USD")
     const [tulos, setTulos] = useState("")
+    const [loading, setLoading] = useState(false)
 
     const API_KEY = process.env.EXPO_PUBLIC_API_KEY;
 
     const muunnaValuutta = async () => {
-        const response = await fetch(
-            `https://api.apilayer.com/exchangerates_data/convert?to=${kohdeValuutta}&from=EUR&amount=${rahasumma}`,
-            {
-                method: "GET",
-                headers: {
-                    apikey: API_KEY ?? ""
+        setLoading(true)
+        try {
+            const response = await fetch(
+                `https://api.apilayer.com/exchangerates_data/convert?to=${kohdeValuutta}&from=EUR&amount=${rahasumma}`,
+                {
+                    method: "GET",
+                    headers: {
+                        apikey: API_KEY ?? ""
+                    }
                 }
-            }
-        );
-        const data = await response.json();
-        //console.log(data)
-        setTulos(data.result.toString());
+            );
+            
+            const data = await response.json();
+            
+            //console.log(data)
+            setTulos(data.result.toString());
+        } finally {
+            setLoading(false)
+        }
+
     }
 
 
@@ -48,14 +57,20 @@ export default function Valuuttamuunnin() {
             <Pressable
                 onPress={Keyboard.dismiss}
             >
-
+                <Image style={styles.image}
+                    source={{uri: 'https://m.media-amazon.com/images/I/510WmeXkLXL.png'}}
+                />
                 <View >
+                   { loading ? 
+                    <ActivityIndicator size="large" />
+                    :
                     <Text style={styles.tulos}> {tulos} </Text>
+                   }
                     <TextInput
                         style={styles.input}
                         onChangeText={setRahasumma}
                         value={rahasumma}
-                        placeholder="Enter € amount to convert.."
+                        placeholder="Enter € to convert.."
                         keyboardType="decimal-pad"
                     />
                     <Picker
@@ -83,8 +98,9 @@ export default function Valuuttamuunnin() {
 const styles = StyleSheet.create({
     input: {
         borderWidth: 1,
-        width: 180,
-        height: 30,
+        width: 240,
+        height: 35,
+        fontSize: 24,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 6
@@ -106,6 +122,12 @@ const styles = StyleSheet.create({
     },
     tulos: {
         fontSize: 36,
-
+        alignSelf: "center",
+        margin: 10
+    },
+    image: {
+        width:200, 
+        height:200,
+        alignSelf: "center",
     }
 });
