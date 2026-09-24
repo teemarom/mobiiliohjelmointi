@@ -96,7 +96,8 @@ export default function SQLite() {
 const styles = StyleSheet.create({
     ruutu: {
         justifyContent: 'flex-start',
-        paddingTop: 150
+        paddingTop: 150,
+        alignItems: "center"
     },
     textInput: {
         borderWidth: 1,
