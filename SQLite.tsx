@@ -66,6 +66,7 @@ export default function SQLite() {
 
     return (
         <View style={styles.ruutu}>
+            <Text style={{fontSize: 24, textDecorationLine:"underline"}}>SQLite TIETOKANTA</Text>
             <TextInput style={styles.textInput}
                 placeholder=" Product.."
                 onChangeText={product => setProduct(product)}
